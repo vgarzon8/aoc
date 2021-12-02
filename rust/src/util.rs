@@ -32,7 +32,7 @@ impl Error for MyError {
     }
 }
 
-pub fn read_file_lines(input_file: &str) -> Vec<String> {
+pub fn read_lines(input_file: &str) -> Vec<String> {
     let path = Path::new(input_file);
     let mut file = File::open(path).expect("Unable to open file");
     let mut data = String::new();

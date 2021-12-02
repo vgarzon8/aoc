@@ -27,7 +27,7 @@ pub fn part1(input_file: &str) -> Result<i32, MyError> {
     //     .collect();
     // println!("{:?}", lines);
 
-    let lines = util::read_file_lines(input_file);
+    let lines = util::read_lines(input_file);
     let data: Vec<i32> = lines
         .iter()
         .map(|x| x.parse::<i32>().expect("failed to parse integer"))
@@ -59,7 +59,7 @@ pub fn part1(input_file: &str) -> Result<i32, MyError> {
 // Part 2: Find three numbers in list whose product matches argument
 pub fn part2(input_file: &str) -> Result<i32, MyError> {
 
-    let lines = util::read_file_lines(input_file);
+    let lines = util::read_lines(input_file);
     let data: Vec<i32> = lines
         .iter()
         .map(|x| x.parse::<i32>().expect("failed to parse integer"))
