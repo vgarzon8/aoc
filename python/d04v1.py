@@ -11,7 +11,7 @@ def part_1(input_file):
         for _, e in enumerate(b):
             boards_map[(k, e[0], e[1])] = e[2]
 
-    # initialize state
+    # init boards state
     state = {}
     for k, b in enumerate(boards):
         for _, e in enumerate(b):
@@ -20,6 +20,7 @@ def part_1(input_file):
     nrows = 5
     ncols = 5
 
+    # init row / col state 
     rows = {}
     cols = {}
     for k, b in enumerate(boards):
@@ -76,7 +77,7 @@ def part_2(input_file):
         for _, e in enumerate(b):
             boards_map[(k, e[0], e[1])] = e[2]
 
-    # initialize state
+    # init state
     state = {}
     for k, b in enumerate(boards):
         for _, e in enumerate(b):
@@ -85,6 +86,7 @@ def part_2(input_file):
     nrows = 5
     ncols = 5
 
+    # init row / col state
     rows = {}
     cols = {}
     for k in range(len(boards)):
