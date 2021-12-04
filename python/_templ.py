@@ -6,25 +6,28 @@
 
 def part_1(input_file):
 
-    dat = load_data(input_file)
+    dat = prep_data(input_file)
 
     return len(dat)
 
 
 def part_2(input_file):
 
-    dat = load_data(input_file)
+    dat = prep_data(input_file)
 
     return len(dat)
 
 
-def load_data(input_file):
-
+def read_lines(input_file):
     with open(input_file, "r") as fn:
         buf = fn.read()
+    return [e.strip() for e in buf.split('\n') if len(e.strip()) > 0]
 
-    dat = [e.strip() for e in buf.split('\n') if len(e.strip()) > 0]
 
+def prep_data(input_file):
+    dat = read_lines(input_file)
+    # additional processing
+    # dat = ...
     return dat
 
 
