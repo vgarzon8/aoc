@@ -73,13 +73,13 @@ def prep_data(input_file):
 
 if __name__ == "__main__":
 
-    test_input_a = "data/05a.txt"
+    test_input = "data/05a.txt"
     input_file = "data/05.txt"
 
     print("part 1")
-    assert part_1(test_input_a, debug=True) == 5
+    assert part_1(test_input, debug=True) == 5
     assert part_1(input_file) == 5632
 
     print("part 2")
-    assert part_2(test_input_a, debug=True) == 12
+    assert part_2(test_input, debug=True) == 12
     assert part_2(input_file) == 22213
