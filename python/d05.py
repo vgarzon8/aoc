@@ -3,6 +3,9 @@
 # https://adventofcode.com/2021/day/5
 # Hydrothermal venture, map with overlapping lines
 
+from math import atan2, sqrt, sin, cos
+
+
 class Map:
     def __init__(self, dat):
         self.dat = dat
@@ -12,36 +15,17 @@ class Map:
             (i, j): 0 for j in range(self.ymax) for i in range(self.xmax)
         }
 
-    def update_up_down(self):
+    def update_lines(self, mode=""):
         for k, (beg, end) in enumerate(self.dat):
-            if beg[0] == end[0]:
-                if beg[1] < end[1]:
-                    r = range(beg[1], end[1] + 1)
-                else:
-                    r = range(end[1], beg[1] + 1)
-                for j in r:
-                    self.grid[(beg[0], j)] += 1
-
-            elif beg[1] == end[1]:
-                if beg[0] < end[0]:
-                    r = range(beg[0], end[0] + 1)
-                else:
-                    r = range(end[0], beg[0] + 1)
-                for i in r:
-                    self.grid[(i, beg[1])] += 1
-
-    def update_diag(self):
-        for k, (beg, end) in enumerate(self.dat):
-            if beg[0] == end[0] or beg[1] == end[1]:
+            if mode == "horiz_vert" and beg[0] != end[0] and beg[1] != end[1]:
                 continue
-            length = abs(end[0] - beg[0]) + 1
-            for k in range(length):
-                if beg[0] < end[0]:
-                    x = beg[0] + k
-                else:
-                    x = end[0] + k
-                m = (end[1] - beg[1]) / (end[0] - beg[0])
-                y = m * (x - beg[0]) + beg[1]
+            th = atan2(end[1] - beg[1], end[0] - beg[0])
+            rmax = sqrt((end[0] - beg[0])**2 + (end[1] - beg[1])**2)
+            steps = max(abs(end[0] - beg[0]), abs(end[1] - beg[1]))
+            scl = rmax / steps
+            for t in range(steps + 1):
+                x = beg[0] + int(round(scl * t * cos(th)))
+                y = beg[1] + int(round(scl * t * sin(th)))
                 self.grid[(x, y)] += 1
 
     def count_overlaps(self):
@@ -58,7 +42,7 @@ class Map:
 def part_1(input_file, debug=False):
     dat = prep_data(input_file)
     g = Map(dat)
-    g.update_up_down()
+    g.update_lines("horiz_vert")
     if debug:
         g.print_state()
     return g.count_overlaps()
@@ -67,11 +51,9 @@ def part_1(input_file, debug=False):
 def part_2(input_file, debug=False):
     dat = prep_data(input_file)
     g = Map(dat)
-    g.update_up_down()
-    g.update_diag()
+    g.update_lines()
     if debug:
         g.print_state()
-
     return g.count_overlaps()
 
 
@@ -94,8 +76,10 @@ if __name__ == "__main__":
     test_input_a = "data/05a.txt"
     input_file = "data/05.txt"
 
+    print("part 1")
     assert part_1(test_input_a, debug=True) == 5
     assert part_1(input_file) == 5632
 
+    print("part 2")
     assert part_2(test_input_a, debug=True) == 12
     assert part_2(input_file) == 22213
