@@ -1,18 +1,18 @@
 # d05.py
 # Advent of Code 2021 day 05 ver 1
 # https://adventofcode.com/2021/day/5
-# ...
+# Hydrothermal venture, map with overlapping lines
 
 
 def part_1(input_file):
     dat = prep_data(input_file)
 
-    xmax = max([max([p[0][0], p[1][0]]) for p in dat])
-    ymax = max([max([p[0][1], p[1][1]]) for p in dat])
+    xmax = max([max([p[0][0], p[1][0]]) for p in dat]) + 1
+    ymax = max([max([p[0][1], p[1][1]]) for p in dat]) + 1
 
     print(xmax, ymax)
 
-    grid = {(i, j): 0 for j in range(ymax + 1) for i in range(xmax + 1)}
+    grid = {(i, j): 0 for j in range(ymax) for i in range(xmax)}
 
     for k, (beg, end) in enumerate(dat):
         if beg[0] == end[0]:
@@ -31,12 +31,12 @@ def part_1(input_file):
             for i in r:
                 grid[(i, beg[1])] += 1
 
-    # for j in range(ymax + 1):
-    #     print("".join([str(grid[(i, j)]) for i in range(xmax + 1)]))
+    # for j in range(ymax):
+    #     print("".join([str(grid[(i, j)]) for i in range(xmax)]))
 
     count = sum([
         1 if grid[(i, j)] > 1 else 0
-        for j in range(ymax + 1) for i in range(xmax + 1)
+        for j in range(ymax) for i in range(xmax)
     ])
 
     return count
@@ -45,10 +45,10 @@ def part_1(input_file):
 def part_2(input_file):
     dat = prep_data(input_file)
 
-    xmax = max([max([p[0][0], p[1][0]]) for p in dat])
-    ymax = max([max([p[0][1], p[1][1]]) for p in dat])
+    xmax = max([max([p[0][0], p[1][0]]) for p in dat]) + 1
+    ymax = max([max([p[0][1], p[1][1]]) for p in dat]) + 1
 
-    grid = {(i, j): 0 for j in range(ymax + 1) for i in range(xmax + 1)}
+    grid = {(i, j): 0 for j in range(ymax) for i in range(xmax)}
 
     for k, (beg, end) in enumerate(dat):
         if beg[0] == end[0]:
@@ -78,12 +78,12 @@ def part_2(input_file):
                 y = m * (x - beg[0]) + beg[1]
                 grid[(x, y)] += 1
 
-    # for j in range(ymax + 1):
-    #     print("".join([str(grid[(i, j)]) for i in range(xmax + 1)]))
+    # for j in range(ymax):
+    #     print("".join([str(grid[(i, j)]) for i in range(xmax)]))
 
     count = sum([
         1 if grid[(i, j)] > 1 else 0
-        for j in range(ymax + 1) for i in range(xmax + 1)
+        for j in range(ymax) for i in range(xmax)
     ])
 
     return count
