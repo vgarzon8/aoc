@@ -3,9 +3,6 @@
 # https://adventofcode.com/2021/day/5
 # Hydrothermal venture, map with overlapping lines
 
-from math import atan2, sqrt, sin, cos
-
-
 class Map:
     def __init__(self, dat):
         self.dat = dat
@@ -16,6 +13,7 @@ class Map:
         }
 
     def update_lines(self, mode=""):
+        from math import atan2, sqrt, sin, cos
         for k, (beg, end) in enumerate(self.dat):
             if mode == "horiz_vert" and beg[0] != end[0] and beg[1] != end[1]:
                 continue
