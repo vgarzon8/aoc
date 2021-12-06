@@ -48,3 +48,10 @@ pub fn read_lines(input_file: &str) -> Vec<String> {
 
     lines
 }
+
+pub fn print_ans(res: Result<i32, MyError>) {
+    match res {
+        Ok(r) => println!("ans: {}", r),
+        Err(e) => println!("{}", e),
+    }
+}
