@@ -1,7 +1,7 @@
-# dXXv1.py
+# dxx.py
 # Advent of Code 2021 day XX ver 1
+# https://adventofcode.com/2021/day/xx
 # count of sequence increases
-# input: https://adventofcode.com/2021/day/XX/input
 
 
 def part_1(input_file):
