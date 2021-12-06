@@ -7,18 +7,18 @@ import copy
 
 
 def count_state(input_file, days=80):
+    LIFE_SPAN, GAP = 7, 2
     dat = prep_data(input_file)
-    cnt = {k: 0 for k in range(9)}
-    for d in dat:
-        cnt[d] += 1
+    cnt = [0 for _ in range(LIFE_SPAN + GAP)]
+    for fish in dat:
+        cnt[fish] += 1
     for t in range(days):
-        new = {}
-        for k in range(8):
-            new[k] = cnt[k + 1]
-        new[8] = cnt[0]
-        new[6] += cnt[0]
-        cnt = new
-    return sum(cnt.values())
+        old = copy.copy(cnt)
+        for k in range(LIFE_SPAN + GAP - 1):
+            cnt[k] = old[k + 1]
+        cnt[LIFE_SPAN + GAP - 1] = old[0]
+        cnt[LIFE_SPAN - 1] += old[0]
+    return sum(cnt)
 
 
 def pop_state(input_file, days=80):
