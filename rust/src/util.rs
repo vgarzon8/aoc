@@ -12,6 +12,7 @@ pub struct MyError {
     details: String,
 }
 
+#[allow(dead_code)]
 impl MyError {
     pub fn new(msg: &str) -> MyError {
         MyError {
@@ -49,6 +50,7 @@ pub fn read_lines(input_file: &str) -> Vec<String> {
     lines
 }
 
+#[allow(dead_code)]
 pub fn print_ans(res: Result<i32, MyError>) {
     match res {
         Ok(r) => println!("ans: {}", r),

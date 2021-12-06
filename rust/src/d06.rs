@@ -30,6 +30,7 @@ pub fn count_array(input_file: &str, num_days: i64) -> Result<i64, MyError> {
 }
 
 // in fact HashMap is not needed -- for future ref
+#[allow(dead_code)]
 pub fn count_dict(input_file: &str, num_days: i64) -> Result<i64, MyError> {
 
     let lines = util::read_lines(input_file);
