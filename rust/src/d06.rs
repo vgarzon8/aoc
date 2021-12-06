@@ -9,7 +9,7 @@ pub fn count_array(input_file: &str, num_days: i64) -> Result<i64, MyError> {
     const GAP: usize = 2;
     let lines = util::read_lines(input_file);
     println!("input file: {}", input_file);
- 
+
     let data = parse_lines(lines);
     println!("data size {}", data.len());
 
@@ -35,7 +35,7 @@ pub fn count_dict(input_file: &str, num_days: i64) -> Result<i64, MyError> {
 
     let lines = util::read_lines(input_file);
     println!("input file: {}", input_file);
- 
+
     let data = parse_lines(lines);
     println!("data size {}", data.len());
 
