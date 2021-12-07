@@ -7,7 +7,7 @@
 def part1(input_file):
     dat = prep_data(input_file)
     fmin = len(dat)*max(dat)**2
-    for i in dat:
+    for i in range(max(dat)):
         fuel = sum([abs(t - i) for t in dat])
         fmin = min(fmin, fuel)
 
