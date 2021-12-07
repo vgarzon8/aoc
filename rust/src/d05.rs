@@ -2,6 +2,7 @@
 
 use regex::Regex;
 use ndarray::prelude::Array;
+use std::cmp::PartialEq;
 use crate::util;
 use util::MyError;
 
@@ -17,24 +18,31 @@ struct Line {
     end: Point,
 }
 
-
-// def part1(input_file, debug=False):
-//     dat = prep_data(input_file)
-//     g = Map(dat)
-//     g.update_lines("horiz_vert")
-//     if debug:
-//         g.print_state()
-//     return g.count_overlaps()
+#[derive(PartialEq)]
+enum Mode {
+    HorizVert,
+    All
+}
 
 pub fn part1(input_file: &str, debug: bool) -> Result<i32, MyError> {
-    let buf = util::read_lines(input_file);
-    println!("input file: {}", input_file);
-    println!("lines head: {:?}", &buf[0..3]);
-    println!("lines tail: {:?}", &buf[(buf.len() - 3)..]);
+    if debug {
+        println!("{}", input_file);
+    }
+    let lines = parse_lines(util::read_lines(input_file));
+    let count = count_overlap(lines, Mode::HorizVert, debug);
+    Ok(count)
+}
 
-    let lines = parse_lines(buf);
-    println!("{:?}", lines);
+pub fn part2(input_file: &str, debug: bool) -> Result<i32, MyError> {
+    if debug {
+        println!("{}", input_file);
+    }
+    let lines = parse_lines(util::read_lines(input_file));
+    let count = count_overlap(lines, Mode::All, debug);
+    Ok(count)
+}
 
+fn count_overlap(lines: Vec<Line>, mode: Mode, debug: bool) -> i32 {
     let xall: Vec<i32> = lines.iter().map(|p| p.beg.x).chain(
         lines.iter().map(|p| p.end.x)
     ).collect();
@@ -47,26 +55,9 @@ pub fn part1(input_file: &str, debug: bool) -> Result<i32, MyError> {
     println!("{:?} {:?}", xmax, ymax);
 
     let mut grid = Array::<i32, _>::zeros(((xmax + 1) as usize, (ymax + 1) as usize));
-    println!("{:?}", grid);
-
-    // from math import atan2, sqrt, sin, cos
-    // for k, (beg, end) in enumerate(self.dat):
-    //     if mode == "horiz_vert" and beg[0] != end[0] and beg[1] != end[1]:
-    //         continue
-    //     th = atan2(end[1] - beg[1], end[0] - beg[0])
-    //     rmax = sqrt((end[0] - beg[0])**2 + (end[1] - beg[1])**2)
-    //     steps = max(abs(end[0] - beg[0]), abs(end[1] - beg[1]))
-    //     scl = rmax / steps
-    //     for t in range(steps + 1):
-    //         x = beg[0] + int(round(scl * t * cos(th)))
-    //         y = beg[1] + int(round(scl * t * sin(th)))
-    //         self.grid[(x, y)] += 1
-
-    let mode = "horiz_vert";
-    // let mode = "";
 
     for ln in lines.iter() {
-        if mode == "horiz_vert" && ln.beg.x != ln.end.x && ln.beg.y != ln.end.y {
+        if (mode == Mode::HorizVert) && (ln.beg.x != ln.end.x) && (ln.beg.y != ln.end.y) {
             continue;
         }
         let dx = (ln.end.x - ln.beg.x) as f64;
@@ -76,27 +67,22 @@ pub fn part1(input_file: &str, debug: bool) -> Result<i32, MyError> {
         let steps = (ln.end.x - ln.beg.x).abs().max((ln.end.y - ln.beg.y).abs());
         let scl = rmax / (steps as f64);
 
-        println!("{:?} {} {} {}, {}", ln, th, rmax, steps, scl);
-
+        if debug {
+            println!("{:?} {} {} {}, {}", ln, th, rmax, steps, scl);
+        }
         for t in 0..(steps + 1) {
             let st = scl * (t as f64);
-            let ix = ln.beg.x as usize + (st * th.cos()).round() as usize; 
-            let iy = ln.beg.y as usize + (st * th.sin()).round() as usize;
+            let ix = (ln.beg.x + (st * th.cos()).round() as i32) as usize; 
+            let iy = (ln.beg.y + (st * th.sin()).round() as i32) as usize;
             grid[[ix, iy]] += 1;
         }
     }
 
-    println!("{:?}", grid.t());
+    if debug {
+        println!("{:?}", grid.t());
+    }
 
-    println!("{:?}", grid.map(|&x| if x > 1 {1} else {0}).sum());
-
-    // let data = parse_lines(lines);
-    // println!("size {}", data.len());
-    // println!("first: {:?}", data.first());
-    // println!("last: {:?}", data.last());
-
-
-    Ok(1)
+    grid.map(|&x| if x > 1 {1} else {0}).sum()
 }
 
 fn parse_lines(buf: Vec<String>) -> Vec<Line> {
