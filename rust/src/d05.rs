@@ -43,16 +43,12 @@ pub fn part2(input_file: &str, debug: bool) -> Result<i32, MyError> {
 }
 
 fn count_overlap(lines: Vec<Line>, mode: Mode, debug: bool) -> i32 {
-    let xall: Vec<i32> = lines.iter().map(|p| p.beg.x).chain(
+    let xmax: i32 = *lines.iter().map(|p| p.beg.x).chain(
         lines.iter().map(|p| p.end.x)
-    ).collect();
-    let yall: Vec<i32> = lines.iter().map(|p| p.beg.y).chain(
+    ).collect::<Vec<i32>>().iter().max().unwrap();
+    let ymax: i32 = *lines.iter().map(|p| p.beg.y).chain(
         lines.iter().map(|p| p.end.y)
-    ).collect();
-
-    let xmax = xall.iter().max().unwrap();
-    let ymax = yall.iter().max().unwrap();
-    println!("{:?} {:?}", xmax, ymax);
+    ).collect::<Vec<i32>>().iter().max().unwrap();
 
     let mut grid = Array::<i32, _>::zeros(((xmax + 1) as usize, (ymax + 1) as usize));
 
