@@ -1,18 +1,16 @@
-# dxx.py
-# Advent of Code 2021 day XX ver 1
-# https://adventofcode.com/2021/day/xx
-# count of sequence increases
+# d08.py
+# Advent of Code 2021 day 8 ver 1
+# https://adventofcode.com/2021/day/8
+# ...
 
 
-def part_1(input_file):
-
+def part1(input_file):
     dat = prep_data(input_file)
 
     return len(dat)
 
 
-def part_2(input_file):
-
+def part2(input_file):
     dat = prep_data(input_file)
 
     return len(dat)
@@ -26,24 +24,23 @@ def read_lines(input_file):
 
 def prep_data(input_file):
     dat = read_lines(input_file)
-    # additional processing
     # dat = ...
     return dat
 
 
 if __name__ == "__main__":
 
-    test_input_a = "data/01a.txt"
-    input_file = "data/01.txt"
+    valid_file = "data/08a.txt"
+    input_file = "data/08.txt"
 
     # part 1
-    assert part_1(test_input_a) == 10
-    ans = part_1(input_file)
-    print("part 1:", ans)
-    # ans: 2000
+    # assert part1(valid_file) == 0
+    print(part1(valid_file))
+    # assert part1(input_file) == 0
+    # print("part 1:", part1(input_file))
 
     # part 2
-    assert part_2(test_input_a) == 10
-    ans = part_2(input_file)
-    print("part 2:", ans)
-    # ans: 2000
+    # assert part2(valid_file) == 0
+    # print(part2(valid_file))
+    # assert part1(input_file) == 0
+    # print("part 2:", part2(input_file))
