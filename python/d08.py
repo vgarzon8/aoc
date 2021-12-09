@@ -1,7 +1,9 @@
 # d08.py
 # Advent of Code 2021 day 8 ver 1
 # https://adventofcode.com/2021/day/8
-# ...
+# Sevent segment search
+
+from functools import reduce
 
 # display segments by number (arranged by count)
 # segments: 0: top, 1: upper left, 2: upper right, 3: middle
@@ -22,16 +24,17 @@ disp_rev = {tuple(v): k for k, v in DISP.items()}
 
 
 def part1(input_file):
-    num_sgm = {1: 2, 4: 4, 7: 3, 8: 7}
-    dat = prep_data(input_file)
-
+    # number of segments per display digit
+    num_sgm = {}
+    for c in [len(v) for (_, v) in DISP.items()]:
+        num_sgm[c] = num_sgm.get(c, 0) + 1
+    # digits with single number of segments
+    sngl = [k for (k, v) in num_sgm.items() if v == 1]
     cnt = 0
-    for (sig, out) in dat:
-        o = [len(set(t)) for t in out]
-        for e in o:
-            if e in num_sgm.values():
+    for (sig, out) in prep_data(input_file):
+        for e in [len(set(t)) for t in out]:
+            if e in sngl:
                 cnt += 1
-
     return cnt
 
 
@@ -40,7 +43,6 @@ def part2(input_file):
 
 
 def decode(sig, out):
-
     # split words and group by count
     sig_cnt = {c: [list(s) for s in sig if len(s) == c] for c in range(2, 8)}
 
@@ -61,22 +63,21 @@ def decode(sig, out):
 
     # segment 1 is single occurrence of len 5 that also appears in len 4
     cnt_5_1 = [k for k, v in cnt_5.items() if v == 1]
-    sgm[1] = inter_single(cnt_5_1, sig_cnt[4][0])
+    sgm[1] = interp_single(cnt_5_1, sig_cnt[4][0])
 
     # segment 4 is the other single occurrence in words of len 5
     sgm[4] = diff_single(cnt_5_1, sgm.values())
 
     # segment 3 (middle) is element w/o assignment in set difference between
     # words of size 4 and size 2
-    sgm[3] = diff_single(ldiff(sig_cnt[4][0], sig_cnt[2][0]), [sgm[1]])
-
+    sgm[3] = diff_single(
+        set(sig_cnt[4][0]).difference(sig_cnt[2][0]), [sgm[1]]
+    )
     # segment 6 (bottom) is common elem in words of size 5, not yet assigned
-    tmp = linter(linter(sig_cnt[5][0], sig_cnt[5][1]), sig_cnt[5][2])
-    sgm[6] = diff_single(tmp, sgm.values())
+    sgm[6] = diff_single(reduce(interp, sig_cnt[5]), sgm.values())
 
     # segment 5 (lower right) is common elem in words of size 6, n / y / a
-    tmp = linter(linter(sig_cnt[6][0], sig_cnt[6][1]), sig_cnt[6][2])
-    sgm[5] = diff_single(tmp, sgm.values())
+    sgm[5] = diff_single(reduce(interp, sig_cnt[6]), sgm.values())
 
     # segment 2 (upper right) is remainder in word of size 7
     sgm[2] = diff_single(sig_cnt[7][0], sgm.values())
@@ -89,23 +90,19 @@ def decode(sig, out):
 
 
 def diff_single(a, b):
-    e = ldiff(a, b)
+    e = [i for i in a if i not in b]
     assert len(e) == 1
     return e[0]
 
 
-def inter_single(a, b):
-    e = linter(a, b)
+def interp_single(a, b):
+    e = interp(a, b)
     assert len(e) == 1
     return e[0]
 
 
-def ldiff(x, y):
-    return [i for i in x if i not in y]
-
-
-def linter(x, y):
-    return [i for i in x if i in y]
+def interp(a, b):
+    return [i for i in a if i in b]
 
 
 def read_lines(input_file):
