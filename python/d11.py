@@ -38,12 +38,14 @@ def iterate(input_file, niter=1000, all_flash=False):
                             continue
                         else:
                             lit.append((i, j))
+                        # visit each neibhbor
                         for k in nb:
                             x = i + k[0]
                             y = j + k[1]
                             if x < 0 or x >= nci or y < 0 or y >= nri:
                                 continue
                             grid[(x, y)] += 1
+
             if lit == lit_old:
                 # print(f"{t} {u} {len(lit)} ")
                 break
