@@ -6,7 +6,8 @@ mod util;
 // mod d05;
 // mod d06;
 // mod d07;
-mod d10;
+// mod d10;
+mod d11;
 
 fn main() {
     // // day 1
@@ -30,7 +31,12 @@ fn main() {
     // assert_eq!(d07::part1("../data/07.txt").unwrap(), 337833);
     // assert_eq!(d07::part2("../data/07a.txt").unwrap(), 168);
     // assert_eq!(d07::part2("../data/07.txt").unwrap(), 96678050);
+    // // day 10
+    // assert_eq!(d10::syntax_score("../data/10a.txt").unwrap(), (26397, 288957));
+    // assert_eq!(d10::syntax_score("../data/10.txt").unwrap(), (344193, 3241238967));
     // day 10
-    assert_eq!(d10::syntax_score("../data/10a.txt").unwrap(), (26397, 288957));
-    assert_eq!(d10::syntax_score("../data/10.txt").unwrap(), (344193, 3241238967));
+    // println!("{:?}", d11::part1("../data/11a.txt", 100, false));
+    // println!("{:?}", d11::part1("../data/11.txt", 100, false));
+    println!("{:?}", d11::part1("../data/11a.txt", 1000, true));
+    // println!("{:?}", d11::part1("../data/11.txt", 1000, true));
 }
