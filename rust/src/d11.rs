@@ -1,14 +1,14 @@
 // d11.rs
-
 use ndarray::prelude::Array;
 use crate::util;
 use util::MyError;
 
-pub fn part1(input_file: &str, niter: usize, all_flash: bool) -> Result<usize, MyError> {
+pub fn iterate(input_file: &str, niter: usize, all_flash: bool) 
+    -> Result<(usize, usize), MyError> {
 
     let data = parse_lines(util::read_lines(input_file));
-    println!("data size: {}", data.len());
-    // println!("{:?}", data);
+    // println!("data size: {}", data.len());
+
     let nri = data.len();
     let nci = data[0].len();
     // println!("{} {}", nri, nci);
@@ -19,7 +19,7 @@ pub fn part1(input_file: &str, niter: usize, all_flash: bool) -> Result<usize, M
             grid[[j, i]] = data[j][i]
         }
     }
-    println!("{:?}", grid);
+    // println!("{:?}", grid);
 
     let mut nb: Vec<(isize, isize)> = Vec::new();
     for j in -1..=1 {
@@ -56,7 +56,8 @@ pub fn part1(input_file: &str, niter: usize, all_flash: bool) -> Result<usize, M
                         for (dj, di) in nb.iter() {
                             let jp = (j as isize) + dj;
                             let ip = (i as isize) + di;
-                            if ip < 0 || ip >= (nci as isize) || jp < 0 || jp >= (nri as isize) {
+                            if ip < 0 || ip >= (nci as isize) 
+                                || jp < 0 || jp >= (nri as isize) {
                                 continue;
                             }
                             grid[[jp as usize, ip as usize]] += 1;
@@ -85,8 +86,8 @@ pub fn part1(input_file: &str, niter: usize, all_flash: bool) -> Result<usize, M
         }
 
     }
-    println!("{:?}", grid);
-    Ok(max_iter)
+    // println!("{:?}", grid);
+    Ok((flash_cnt, max_iter))
 }
 
 fn parse_lines(lines: Vec<String>) -> Vec<Vec<usize>> {

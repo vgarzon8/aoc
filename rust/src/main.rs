@@ -35,8 +35,8 @@ fn main() {
     // assert_eq!(d10::syntax_score("../data/10a.txt").unwrap(), (26397, 288957));
     // assert_eq!(d10::syntax_score("../data/10.txt").unwrap(), (344193, 3241238967));
     // day 10
-    // println!("{:?}", d11::part1("../data/11a.txt", 100, false));
-    // println!("{:?}", d11::part1("../data/11.txt", 100, false));
-    println!("{:?}", d11::part1("../data/11a.txt", 1000, true));
-    // println!("{:?}", d11::part1("../data/11.txt", 1000, true));
+    assert_eq!(d11::iterate("../data/11a.txt", 100, false).unwrap(), (1656, 0));
+    assert_eq!(d11::iterate("../data/11.txt", 100, false).unwrap(), (1588, 0));
+    assert_eq!(d11::iterate("../data/11a.txt", 1000, true).unwrap(), (3125, 195));
+    assert_eq!(d11::iterate("../data/11.txt", 1000, true).unwrap(), (7918, 517));
 }
