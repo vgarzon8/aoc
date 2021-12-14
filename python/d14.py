@@ -3,49 +3,19 @@
 # https://adventofcode.com/2021/day/11
 # Extended poly
 
-from collections import Counter
-
-
-def part1(input_file, nsteps=10):
+def count_pairs(input_file, nsteps=10):
     tmplt, rules = prep_data(input_file)
     rules = {k: v for (k, v) in rules}
     print(tmplt)
     print(len(rules))
 
-    for t in range(nsteps):
-        poly = []
-        for k in range(len(tmplt) - 1):
-            srch_pair = "".join(tmplt[slice(k, k + 2)])
-            insert = rules.get(srch_pair, None)
-            poly.append(tmplt[k])
-            if insert is not None:
-                poly.append(insert)
-        poly.append(tmplt[-1])
-
-        tmplt = poly.copy()
-
-    cntr = Counter(tmplt)
-
-    count = cntr.most_common(None)
-    max_count = max(count, key=lambda x: x[1])[1]
-    min_count = min(count, key=lambda x: x[1])[1]
-
-    print(count)
-
-    return max_count - min_count
-
-
-def part2(input_file, nsteps=10):
-    tmplt, rules = prep_data(input_file)
-    rules = {k: v for (k, v) in rules}
-    print(tmplt)
-    print(len(rules))
-
+    # initial pairs
     pair_count = {}
     for k in range(len(tmplt) - 1):
         p = "".join(tmplt[slice(k, k + 2)])
         pair_count[p] = pair_count.get(p, 0) + 1
 
+    # accumulate pair counts
     for t in range(nsteps):
         pair_split = {}
         for k, v in pair_count.items():
@@ -58,14 +28,17 @@ def part2(input_file, nsteps=10):
 
         pair_count = pair_split.copy()
 
+    # count elements
     elem_count = {}
     for k, v in pair_count.items():
         elem_count[k[0]] = elem_count.get(k[0], 0) + v
+    # add last element, which doesn't change from the template
     elem_count[tmplt[-1]] = elem_count.get(tmplt[-1], 0) + 1
 
     print(pair_split)
     print(elem_count)
 
+    # min and max counts
     count = tuple(elem_count.items())
     max_count = max(count, key=lambda x: x[1])[1]
     min_count = min(count, key=lambda x: x[1])[1]
@@ -93,9 +66,9 @@ if __name__ == "__main__":
     input_file = "data/14.txt"
 
     # part 1
-    assert part1(valid_file) == 1588
-    assert part1(input_file) == 3095
+    assert count_pairs(valid_file) == 1588
+    assert count_pairs(input_file) == 3095
 
     # part 2
-    assert part2(valid_file, 40) == 2188189693529
-    assert part2(input_file, 40) == 3152788426516
+    assert count_pairs(valid_file, 40) == 2188189693529
+    assert count_pairs(input_file, 40) == 3152788426516
