@@ -1,104 +1,94 @@
 # d12.py
 # Advent of Code 2021 day 12 ver 1
 # https://adventofcode.com/2021/day/12
-# Passage pathing: 
+# Passage paths
 
 import networkx as nx
 
 
-def all_paths_util(g, u, d, visited, path):
-    visited[u] = True
-    path.append(u)
+class Graph:
+    def __init__(self, dat):
+        self.g = nx.Graph(dat)
+        self.paths = []
 
-    if u == d:
-        print(path)
-    else:
-        for i in g[u]:
-            if visited[i] is False or i.isupper():
-                all_paths_util(g, i, d, visited, path)
+    def all_paths_part1(self, current, end, visited, path):
+        visited[current] = True
+        path.append(current)
 
-    path.pop()
-    visited[u] = False
+        if current == end:
+            self.paths.append(path.copy())
+        else:
+            for i in self.g[current]:
+                if visited[i] is False or i.isupper():
+                    self.all_paths_part1(i, end, visited, path)
 
+        path.pop()
+        visited[current] = False
 
-def all_paths(g, s, d):
+    def all_paths_part2(self, current, end, visited, path, count):
+        visited[current] = True
+        count[current] += 1
+        path.append(current)
 
-    visited = {}
-    for k in g.nodes:
-        visited[k] = False
+        if current == end:
+            if path not in self.paths:
+                self.paths.append(path.copy())
+        else:
+            for i in self.g[current]:
+                cnt = [
+                    c for (k, c) in count.items()
+                    if (k.islower() and k != "start" and k != "end")
+                ]
+                mask = (
+                    visited[i] is False or i.isupper() is True
+                    or (
+                        i != "start"
+                        and i.islower()
+                        and all([c <= 2 for c in cnt])
+                        and (len([c for c in cnt if c > 1]) < 2)
+                    )
+                )
+                if mask:
+                    self.all_paths_part2(i, end, visited, path, count)
+ 
+        path.pop()
+        visited[current] = False
+        count[current] -= 1
 
-    path = []
-    all_paths_util(g, s, d, visited, path)
+    def all_paths(self, start, end, mode="part1"):
+        visited = {}
+        for k in self.g.nodes:
+            visited[k] = False
 
+        count = {}
+        for k in self.g.nodes:
+            count[k] = 0
 
+        path = []
+        if mode == "part1":
+            self.all_paths_part1(start, end, visited, path)
+        elif mode == "part2":
+            self.all_paths_part2(start, end, visited, path, count)
+        else:
+            raise Exception(
+                f"mode should be one of 'part1' or 'part'2, got {mode}"
+            )
 
-def part1(input_file):
-    dat = prep_data(input_file)
-
-    # print(dat)
-
-    # # g = nx.Graph([("start", "A"), ("A", "B"), ("start", "B"), ("A", "end"), ("B", "end")])
-
-    g = nx.Graph(dat)
-    # print(g)
-
-    # for path in sorted(nx.all_simple_edge_paths(g, "start", "end")):
-    #     print(path)
-
-    # for path in sorted(nx.all_simple_paths(g, "start", "end")):
-    #     print(path)
-
-
-    # print(list(g.nodes))
-    # print(list(g.edges))
-    # print(g.degree)
-    # print(g.adj)
-    # print(list(g["start"]))
-
-    # paths = []
-
-    # for n in g["start"]:s
-    #     for p in g[n]:
-    #         for q in g[p]:
-    #             for r in g[q]:
-    #                 print(n, p, q, r)
-
-    # paths = ["start"]
-    # for n in g["start"]:
-    #     print(n)
-
-    all_paths(g, "start", "end")
-
-
-    # starts = [d for d in dat if "start" in d]
-    # ends = [d for d in dat if "end" in d]
-    # print("starts:", starts)
-    # print("ends:", ends)
-
-    # paths = []
-    # start_edge = starts[0]
-    # path = [start_edge]
-    # remain_edges = dat.copy()
-    # remain_edges.remove(start_edge)
-    # print(start_edge)
-    # print(remain_edges)
-    # beg_node = [n for n in start_edge if n != "start"][0]
-    # print(beg_node)
-    # next_edges = [d for d in remain_edges if beg_node in d]
-    # print(next_edges)
-    # prev_path = path.copy()
-    # new_path = path.copy()
-    # for e in next_edges:
-    #     new_path.append(e)
-    #     print(new_path)
-
-    return len(dat)
+        return self.paths
 
 
-def part2(input_file):
-    dat = prep_data(input_file)
+def count_paths(input_file, mode="part1", verbose=False):
+    caves = Graph(prep_data(input_file))
+    paths = caves.all_paths("start", "end", mode=mode)
 
-    return len(dat)
+    if verbose is True:
+        print(caves.g)
+        print("nodes", caves.g.nodes)
+        print("edges", caves.g.edges)
+        for p in paths:
+            print(p)
+
+    return len(paths)
 
 
 def read_lines(input_file):
@@ -115,21 +105,14 @@ def prep_data(input_file):
 
 if __name__ == "__main__":
 
-    # valid_file = "data/12a.txt"
+    valid_file = "data/12a.txt"
     # valid_file = "data/12b.txt"
-    valid_file = "data/12c.txt"
+    # valid_file = "data/12c.txt"
     input_file = "data/12.txt"
 
-    # part 1
-    # assert part1(valid_file) == 0
-    # print(part1(valid_file))
-    # part1(valid_file)
-    part1(input_file)
-    # assert part1(input_file) == 0
-    # print("part 1:", part1(input_file))
+    # # part 1
+    # assert count_paths(valid_file) == 10
+    # assert count_paths(input_file) == 3450
 
-    # part 2
-    # assert part2(valid_file) == 0
-    # print(part2(valid_file))
-    # assert part2(input_file) == 0
-    # print("part 2:", part2(input_file))
+    # # part 2
+    print(count_paths(valid_file, "part2", True))
